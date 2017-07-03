@@ -39,7 +39,7 @@
           <div class="detail-main">
             <h1 class="name">{{seller.name}}</h1>
             <div class="star-wrapper">
-              <star :size="48" :score="computedScore(seller.grade)"></star>
+              <star :size="48" :score="computedScore(seller.gradeServer,seller.gradeCook)"></star>
             </div>
             <div class="title">
               <div class="line"> </div>
@@ -97,8 +97,8 @@ export default {
     hideDetail() {
       this.detailShow = false;
     },
-    computedScore(score) {
-      return parseFloat(score);
+    computedScore(score1, score2) {
+      return (parseFloat(score1) + parseFloat(score2)) / 2
     }
   }
 }

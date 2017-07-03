@@ -145,20 +145,20 @@
     <div class="ratings-content">
       <div class="info">
         <div class="mark">
-          <div class="num">{{seller.score}}</div>
+          <div class="num">{{seller.grade}}</div>
           <div class="text">综合评分</div>
-          <div class="contrast">高于周边商家{{seller.rankRate}}%</div>
+          <div class="contrast">高于周边商家{{seller.ranke}}%</div>
         </div>
         <div class="stars">
           <div class="serviceScore">
             <span class="text">服务态度</span>
-            <star :size="36" :score="seller.serviceScore"></star>
-            <span class="num">{{seller.serviceScore}}</span>
+            <star :size="36" :score="seller.gradeServer"></star>
+            <span class="num">{{seller.gradeServer}}</span>
           </div>
           <div class="foodScore">
-            <span class="text">服务态度</span>
-            <star :size="36" :score="seller.foodScore"></star>
-            <span class="num">{{seller.foodScore}}</span>
+            <span class="text">美味指数</span>
+            <star :size="36" :score="seller.gradeCook"></star>
+            <span class="num">{{seller.gradeCook}}</span>
           </div>
           <div class="deliveryTime">
             <span class="text">送达时间</span>
@@ -189,15 +189,15 @@
                   <span class="rateTime">{{evel.rateTime | time}}</span>
                 </div>
                 <div class="star-wrapper">
-                  <star :size="24" :score="evel.score"></star>
+                  <star :size="24" :score="gradeComputed(evel.grade)"></star>
                   <span class="deliveryTime">{{evel.deliveryTime}}分钟送达</span>
                 </div>
                 <div class="text">
-                  {{evel.text}}
+                  {{evel.rewardMsg}}
                 </div>
                 <div class="recommend">
-                  <span class="icon icon-thumb_up" v-show="evel.recommend.length"></span>
-                  <span class="dish" v-for="dish in evel.recommend">{{dish}}</span>
+                  <span class="icon icon-thumb_up" v-show="evel.foodList.length"></span>
+                  <span class="dish" v-for="food in evel.foodList">{{food.foodName}}</span>
                 </div>
               </div>
             </li>
@@ -230,6 +230,10 @@ export default {
         count: 0,
         active: false
       }, {
+        name: '一般',
+        count: 0,
+        active: false
+      }, {
         name: '吐槽',
         count: 0,
         active: false
@@ -253,14 +257,13 @@ export default {
           this.scroll.refresh()
         })
       }
-      return selectIndex ? this.ratings.filter((data) => this.evelflag ? data.rateType === selectIndex - 1 && data.text : data.rateType === selectIndex - 1) : this.ratings.filter((data) => this.evelflag ? data.text : true)
+      return selectIndex ? this.ratings.filter((data) => this.evelflag ? data.rewardType === selectIndex - 1 && data.rewardMsg : data.rewardType === selectIndex - 1) : this.ratings.filter((data) => this.evelflag ? data.rewardMsg : true)
     }
   },
   methods: {
     _init() {
-      axios.get('static/data.json').then((res) => {
-        this.ratings = res.data.ratings
-        this.seller = res.data.seller
+      axios.get('/api/shop/1/reward').then((res) => {
+        this.ratings = res.data;
         this._initClassifyArr()
         this.$nextTick(() => {
           this.scroll = new BScroll(this.$refs.ratingsWrapper, {
@@ -268,11 +271,24 @@ export default {
           })
         })
       })
+      axios.get('/api/shop/1').then((res) => {
+        this.seller = res.data;
+      })
+//      axios.get('static/data.json').then((res) => {
+//        this.ratings = res.data.ratings;
+//        this.seller = res.data.seller;
+//        this._initClassifyArr()
+//        this.$nextTick(() => {
+//          this.scroll = new BScroll(this.$refs.ratingsWrapper, {
+//            click: true
+//          })
+//        })
+//      })
     },
     _initClassifyArr() {
       this.classifyArr.forEach((data, index) => {
         if (index) {
-          data.count = this.ratings.filter((temp) => temp.rateType === index - 1).length
+          data.count = this.ratings.filter((temp) => temp.rewardType === index - 1).length
         } else {
           data.count = this.ratings.length
         }
@@ -283,6 +299,9 @@ export default {
         data.active = false
       })
       item.active = true
+    },
+    gradeComputed(grade) {
+      return parseInt(grade);
     }
   }
 }

@@ -61,17 +61,13 @@ export default {
     seller: Object
   },
   created() {
-    axios.get('/api/shop/1').then((res) => {
-      this.goods = res.data.goods
+    axios.get('/api/shop/1/goods').then((res) => {
+      this.goods = res.data;
       this.$nextTick(() => {
         this._initScroll(); // 初始化scroll
         this._calculateHeight(); // 初始化列表高度列表
       })
     });
-//    this.$nextTick(() => {
-//      this._initScroll(); // 初始化scroll
-//      this._calculateHeight(); // 初始化列表高度列表
-//    })
   },
   data: function() {
     return {

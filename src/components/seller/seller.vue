@@ -136,9 +136,9 @@
         <div class="title">
           <div class="text">{{seller.name}}</div>
           <div class="star-wrapper">
-            <star :size="36" :score="seller.score"></star>
-            <span class="rate-count">({{seller.ratingCount}})</span>
-            <span class="sell-count">月售{{seller.sellCount}}单</span>
+            <star :size="36" :score="computedScore(seller.gradeServer,seller.gradeCook)"></star>
+            <span class="rate-count">({{seller.likeCount}})</span>
+            <span class="sell-count">月售{{seller.monthlyCounts}}单</span>
           </div>
           <div class="collect" @click="collectflag=!collectflag">
             <span class="icon-favorite" :class="{'active':collectflag}"></span>
@@ -155,7 +155,7 @@
           <div class="block">
             <h2>商家配送</h2>
             <div class="content">
-              <span class="num">{{seller.deliveryPrice}}</span>元
+              <span class="num">{{seller.deliveryMoney}}</span>元
             </div>
           </div>
           <div class="block">
@@ -171,15 +171,15 @@
         <div class="bulletin">
           <h1>公告与活动</h1>
           <div class="content">
-            {{seller.bulletin}}
+            {{seller.introduce}}
           </div>
         </div>
       </div>
       <div class="supports">
         <ul>
-          <li class="item" v-for="item in seller.supports">
-            <iconMap :iconType="item.type"></iconMap>
-            <span class="text">{{item.description}}</span>
+          <li class="item" v-for="item in seller.discountDescList">
+            <iconMap :iconType="item.id-1"></iconMap>
+            <span class="text">{{item.discountDesc}}</span>
           </li>
         </ul>
       </div>
@@ -188,7 +188,7 @@
         <h1>商家实景</h1>
         <div class="img-wrapper" ref="picsWrapper">
           <div ref="picList">
-            <img v-for="pic in seller.pics" :src="pic" width="120" height="90">
+            <img v-for="pic in seller.imgList" :src="pic" width="120" height="90">
           </div>
         </div>
       </div>
@@ -196,7 +196,7 @@
       <div class="seller-info">
         <h1>商家信息</h1>
         <ul class="info-list">
-          <li class="info" v-for="info in seller.infos">{{info}}</li>
+          <li class="info">{{seller.address}}</li>
         </ul>
       </div>
     </div>
@@ -225,8 +225,8 @@ export default {
   },
   methods: {
     _init() {
-      axios.get('static/data.json').then((res) => {
-        this.seller = res.data.seller
+      axios.get('/api/shop/1').then((res) => {
+        this.seller = res.data
         this.$nextTick(() => {
           this.sellerScroll = new BScroll(this.$refs.sellerWrapper, {
             click: true
@@ -241,11 +241,14 @@ export default {
       }
       const PIC_WIDTH = 120
       const MARGIN = 6
-      let picLen = this.seller.pics.length
+      let picLen = this.seller.imgList.length
       this.$refs.picList.style.width = PIC_WIDTH * picLen + MARGIN * (picLen - 1) + 'px'
       this.picsScroll = new BScroll(this.$refs.picsWrapper, {
         scrollX: true
       })
+    },
+    computedScore(score1, score2) {
+      return (parseFloat(score1) + parseFloat(score2)) / 2
     }
   }
 }
