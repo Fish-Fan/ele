@@ -18,7 +18,7 @@
           另需要配送费￥{{deliveryPrice}}元
         </div>
       </div>
-      <div class="content-right" :class="{'enough':totalPrice>=minPrice}">
+      <div class="content-right" :class="{'enough':totalPrice>=minPrice}" @click="payOrder(selectFoods)">
         {{payDesc}}
       </div>
     </div>
@@ -63,6 +63,9 @@
 import cartcontrol from 'components/cartcontrol/cartcontrol'
 import backdrop from 'components/backdrop/backdrop'
 import BScroll from 'better-scroll'
+import axios from 'axios'
+
+var qs = require('qs')
 
 export default {
   props: {
@@ -93,11 +96,19 @@ export default {
         show: false
       }],
       dropBalls: [],
-      listShow: false
+      listShow: false,
+      sendFoodData: {
+        user: {},
+        foodList: [],
+        totalPrice: ''
+      }
     }
   },
   created() {
     this.$root.eventHub.$on('cart.add', this.drop)
+    axios.get('/static/user.json').then((res) => {
+      this.sendFoodData.user = res.data
+    })
   },
   computed: {
     showBackdrop() {
@@ -114,6 +125,7 @@ export default {
           total += food.price * food.count
         }
       })
+      this.sendFoodData.totalPrice = total
       return total
     },
     totalCount() {
@@ -213,6 +225,24 @@ export default {
         ball.show = false
         el.style.display = 'none'
       }
+    },
+    payOrder(selectFoods) {
+      for (var i = 0; i < selectFoods.length; i++) {
+        var foodData = {};
+        foodData.foodName = selectFoods[i].foodName
+        foodData.price = selectFoods[i].price
+        foodData.count = selectFoods[i].count
+        this.sendFoodData.foodList.push(foodData)
+      }
+      axios.post('/api/order/pay', {orderDetail: this.sendFoodData}, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then((res) => {
+        if (res.data === 'success') {
+          this.sendFoodData.foodList = []
+        }
+      })
     }
   },
   components: {

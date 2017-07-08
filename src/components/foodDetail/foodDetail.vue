@@ -5,12 +5,12 @@
         <div class="back" @click="showToggle()">
           <i class="icon-arrow_lift"></i>
         </div>
-        <img :src="food.image" height="425" width="100%">
+        <img :src="food.foodImg" height="425" width="100%">
         <div class="info">
-          <div class="title">{{food.name}}</div>
+          <div class="title">{{food.foodName}}</div>
           <div class="desc">
-            <span>月售{{food.sellCount}}</span>
-            <span>好评率{{food.rating}}%</span>
+            <span>月售{{food.monthlyCounts}}</span>
+            <span>好评率{{food.grade}}%</span>
           </div>
           <div class="price">
             <span class="unit">￥</span>{{food.price}}
@@ -46,7 +46,7 @@
             <ul>
               <li class="evel" v-for="evel in evelArr">
                 <div class="userInfo">
-                  <div class="time">{{evel.rateTime | time}}</div>
+                  <div class="time">{{evel.rewardTime | time}}</div>
                   <div class="user">
                     <span>{{evel.username}}</span>
                     <span class="avatar"><img :src="evel.avatar" width="12" height="12"></span>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="content">
                   <span class="icon" :class="evel.rateType?'icon-thumb_down':'icon-thumb_up'"></span>
-                  <span class="text">{{evel.text}}</span>
+                  <span class="text">{{evel.rewardMsg}}</span>
                 </div>
               </li>
             </ul>
@@ -82,15 +82,19 @@ export default {
       showDetail: false,
       classifyArr: [{
         name: '全部',
-        count: this.food.ratings.length,
+        count: this.food.foodRewardList.length,
         active: true
       }, {
         name: '推荐',
-        count: this.food.ratings.filter((data) => data.rateType === 0).length,
+        count: this.food.foodRewardList.filter((data) => data.rewardType === 0).length,
+        active: false
+      }, {
+        name: '一般',
+        count: this.food.foodRewardList.filter((data) => data.rewardType === 1).length,
         active: false
       }, {
         name: '吐槽',
-        count: this.food.ratings.filter((data) => data.rateType).length,
+        count: this.food.foodRewardList.filter((data) => data.rewardType === 2).length,
         active: false
       }],
       evelflag: true
@@ -109,7 +113,7 @@ export default {
           this.detailWrapper.refresh()
         })
       }
-      return selectIndex ? this.food.ratings.filter((data) => this.evelflag ? data.rateType === selectIndex - 1 && data.text : data.rateType === selectIndex - 1) : this.food.ratings.filter((data) => this.evelflag ? data.text : true)
+      return selectIndex ? this.food.foodRewardList.filter((data) => this.evelflag ? data.rewardType === selectIndex - 1 && data.rewardMsg : data.rewardType === selectIndex - 1) : this.food.foodRewardList.filter((data) => this.evelflag ? data.rewardMsg : true)
     }
   },
   methods: {
