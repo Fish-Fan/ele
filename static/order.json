@@ -1,0 +1,20 @@
+{"username":"fanyank",
+  "phoneNum":"17638918399",
+  "isNoName":true,
+  "sumMoney":34.0,
+  "address":"天津市西青区天津工业大学软件园4号楼",
+  "generateTime":"2017-07-08 09:54:07",
+  "status":1,
+  "foodList":[
+    {"foodName":"皮蛋瘦肉粥", "price":10,"count":1},
+    {"foodName":"扁豆焖面","price":14,"count":1},
+    {"foodName":"葱花饼","price":10,"count":1}],
+  "user":{"id":1,
+    "username":"fanyank",
+    "password":"123123",
+    "email":"fanyank@126.com",
+    "avatar":"http://static.galileo.xiaojukeji.com/static/tms/default_header.png",
+    "phoneNum":"17638918399",
+    "weixin":"weixin",
+    "lastAddress":"天津市西青区天津工业大学软件园4号楼"
+  }}

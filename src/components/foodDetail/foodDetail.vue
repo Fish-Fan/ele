@@ -104,6 +104,11 @@ export default {
     evelArr() {
       let selectIndex = 0
       this.classifyArr.forEach((data, index) => {
+        if (index === 0) {
+          data.count = this.food.foodRewardList.length
+        } else {
+          data.count = this.food.foodRewardList.filter((data) => data.rewardType === (index - 1)).length
+        }
         if (data.active) {
           selectIndex = index
         }

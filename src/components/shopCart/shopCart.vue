@@ -239,9 +239,8 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then((res) => {
-        if (res.data === 'success') {
-          this.sendFoodData.foodList = []
-        }
+        this.sendFoodData.foodList = []
+        this.selectedFood = []
       })
     }
   },
