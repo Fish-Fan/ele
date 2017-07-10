@@ -98,7 +98,6 @@ export default {
       dropBalls: [],
       listShow: false,
       sendFoodData: {
-        user: {},
         foodList: [],
         totalPrice: ''
       }
@@ -106,9 +105,6 @@ export default {
   },
   created() {
     this.$root.eventHub.$on('cart.add', this.drop)
-    axios.get('/static/user.json').then((res) => {
-      this.sendFoodData.user = res.data
-    })
   },
   computed: {
     showBackdrop() {
@@ -227,13 +223,7 @@ export default {
       }
     },
     payOrder(selectFoods) {
-      for (var i = 0; i < selectFoods.length; i++) {
-        var foodData = {};
-        foodData.foodName = selectFoods[i].foodName
-        foodData.price = selectFoods[i].price
-        foodData.count = selectFoods[i].count
-        this.sendFoodData.foodList.push(foodData)
-      }
+      this.sendFoodData.foodList = this.selectFoods
       axios.post('/api/order/pay', {orderDetail: this.sendFoodData}, {
         headers: {
           'Content-Type': 'application/json'
