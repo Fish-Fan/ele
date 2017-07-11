@@ -231,6 +231,9 @@ export default {
       }).then((res) => {
         this.sendFoodData.foodList = []
         this.selectedFood = []
+        window.location.href = '/static/demo.html?orderId=' + res.data
+      }).catch(function (error) {
+        alert(error)
       })
     }
   },
