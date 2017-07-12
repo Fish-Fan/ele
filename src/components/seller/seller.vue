@@ -141,8 +141,8 @@
             <span class="sell-count">月售{{seller.monthlyCounts}}单</span>
           </div>
           <div class="collect" @click="collectShop">
-            <span class="icon-favorite" :class="{'active':collectflag}"></span>
-            <span class="text" >{{computedCollectFlag?'已收藏':'收藏'}}</span>
+            <span class="icon-favorite" :class="{'active':seller.collectFlag}"></span>
+            <span class="text" >{{seller.collectFlag?'已收藏':'收藏'}}</span>
           </div>
         </div>
         <div class="remark">
@@ -216,8 +216,7 @@ export default {
   },
   data() {
     return {
-      seller: {},
-      collectflag: false
+      seller: {}
     }
   },
   created() {
@@ -251,14 +250,14 @@ export default {
       return (parseFloat(score1) + parseFloat(score2)) / 2
     },
     collectShop() {
-      if (this.collectflag) {
+      if (this.seller.collectFlag) {
         axios.post('/api/shop/uncollect', {'shopId': this.seller.id}, {
           headers: {
             'Content-Type': 'application/json'
           }
         }).then((res) => {
           if (res.data === 'success') {
-            this.collectflag = false
+            this.seller.collectFlag = false
           }
         })
       } else {
@@ -268,16 +267,10 @@ export default {
           }
         }).then((res) => {
           if (res.data === 'success') {
-            this.collectflag = true
+            this.seller.collectFlag = true
           }
         })
       }
-    }
-  },
-  computed: {
-    computedCollectFlag() {
-      this.collectflag = this.seller.collectFlag;
-      return this.collectflag
     }
   }
 }
