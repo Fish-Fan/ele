@@ -58,10 +58,11 @@ const ERR_OK = 0
 const eventHub = new Vue()
 export default {
   props: {
-    seller: Object
+    seller: Object,
+    shopId: String
   },
   created() {
-    axios.get('/api/shop/1/goods').then((res) => {
+    axios.get('/api/shop/' + this.shopId + '/goods').then((res) => {
       this.goods = res.data;
       this.$nextTick(() => {
         this._initScroll(); // 初始化scroll

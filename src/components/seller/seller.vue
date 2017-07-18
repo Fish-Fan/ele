@@ -210,6 +210,9 @@ import star from 'components/star/star'
 import iconMap from 'components/iconMap/iconMap'
 
 export default {
+  props: {
+    shopId: String
+  },
   components: {
     star: star,
     iconMap: iconMap
@@ -224,7 +227,7 @@ export default {
   },
   methods: {
     _init() {
-      axios.get('/api/shop/1').then((res) => {
+      axios.get('/api/shop/' + this.shopId).then((res) => {
         this.seller = res.data
         this.$nextTick(() => {
           this.sellerScroll = new BScroll(this.$refs.sellerWrapper, {

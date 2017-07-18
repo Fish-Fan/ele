@@ -192,8 +192,8 @@
                   <star :size="24" :score="gradeComputed(evel.grade)"></star>
                   <span class="deliveryTime">{{evel.deliveryTime}}分钟送达</span>
                 </div>
-                <div class="text">
-                  {{evel.rewardMsg}}
+                <div class="text" v-html="evel.rewardMsg">
+
                 </div>
                 <div class="recommend">
                   <span class="icon icon-thumb_up" v-show="evel.foodList.length"></span>
@@ -214,6 +214,9 @@ import star from 'components/star/star'
 import BScroll from 'better-scroll'
 
 export default {
+  props: {
+    shopId: String
+  },
   components: {
     star: star
   },
@@ -262,7 +265,7 @@ export default {
   },
   methods: {
     _init() {
-      axios.get('/api/shop/1/reward').then((res) => {
+      axios.get('/api/shop/' + this.shopId + '/reward').then((res) => {
         this.ratings = res.data;
         this._initClassifyArr()
         this.$nextTick(() => {
